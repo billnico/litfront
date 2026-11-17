@@ -20,8 +20,8 @@ function FeedPersonCard({ person, onAct, isActing }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <article className="w-full max-w-[480px] overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-card transition-all duration-300 hover:shadow-lg">
-      <div className="relative grid aspect-[4/4] sm:aspect-[4/4.2] place-items-center overflow-hidden bg-[linear-gradient(145deg,#ff4458_0%,#c026d3_40%,#0f172a_100%)]">
+    <article className=" relative w-full max-w-[480px] overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-card transition-all duration-300 hover:shadow-lg">
+      <div className="relative grid aspect-[4/6] place-items-center overflow-hidden bg-[linear-gradient(145deg,#ff4458_0%,#c026d3_40%,#0f172a_100%)]">
         {avatar_url && !imgError ? (
           <img
             src={avatar_url}
@@ -35,55 +35,56 @@ function FeedPersonCard({ person, onAct, isActing }) {
             {person.display_name.split(" ").map((s) => s[0]).slice(0, 2).join("")}
           </span>
         )}
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent px-5 pb-5 pt-16 text-white">
+        <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-slate-950/60 via-slate-950/50 to-transparent px-1.5 pb-2 pt-3 text-white">
           <div className="flex items-baseline gap-2.5">
-            <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
+            <h2 className="flex flex-col text-sm font-black tracking-tight sm:text-md">
               {person.display_name}
+            <span className="text-base font-normal opacity-90">{person.age}</span>
             </h2>
-            <span className="text-xl font-normal opacity-90">{person.age}</span>
-            <span className="ml-auto rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-xs font-bold text-white">
+            <span className="ml-auto rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-xs font-bold text-red-800">
               {genderLabel}
             </span>
           </div>
         </div>
       </div>
-
-      <div className="grid gap-3 px-5 pt-4 pb-4">
-        <span className="inline-flex items-center justify-self-start gap-1.5 rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
+      
+      <div className="absolute bottom-0 flex flex-col  bg-gradient-to-t from-slate-950/60 via-slate-950/50 to-transparent ">
+      <div className="gap-3 px-2 pt-4 relative">
+        <span className="absolute inline-flex right-1 -top-1.5 items-center justify-self-start gap-1.5 rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
           <Icon name="cap" size={14} className="text-rose-400" /> {label(person.university)}
         </span>
-        {person.university !== NONE_ID && (person.course || person.year_of_study) && (
-          <p className="text-xs font-medium text-slate-500">
-            {[person.course, person.year_of_study && `Year ${person.year_of_study}`].filter(Boolean).join(" · ")}
-          </p>
-        )}
+        
         {person.bio && (
-          <p className="text-sm leading-relaxed text-slate-700">
+          <div className="grid grid-flow-col gap-1 max-h-12 overflow-hidden text-sm leading-relaxed text-white">
+          <p className="">
             {person.bio}
           </p>
+          <span className="pt-5">...</span>
+          </div>
         )}
       </div>
 
       {/* Action bar for endless feed */}
-      <div className="flex items-center justify-center gap-8 border-t border-slate-100 bg-slate-50/70 px-5 py-3.5">
+      <div className="flex items-center justify-center gap-10 sm:gap-16  px-5 pb-2">
         <button
-          className="group flex h-14 w-14 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition-all hover:enabled:scale-110 hover:enabled:border-slate-300 hover:enabled:bg-rose-50/50 hover:enabled:text-rose-500 active:scale-95 disabled:opacity-50"
+          className="group flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition-all hover:enabled:scale-110 hover:enabled:border-slate-300 hover:enabled:bg-rose-50/50 hover:enabled:text-rose-500 active:scale-95 disabled:opacity-50"
           onClick={() => onAct(person.id, "pass")}
           disabled={isActing}
           aria-label={`Pass on ${person.display_name}`}
           title="Pass"
         >
-          <Icon name="x" size={24} className="transition-transform group-hover:rotate-12" />
+          <Icon name="x" size={16} className="transition-transform group-hover:rotate-12" />
         </button>
         <button
-          className="group flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[#ff4458] to-[#ff6b6b] text-white shadow-md shadow-rose-500/30 transition-all hover:enabled:scale-110 hover:enabled:shadow-lg hover:enabled:shadow-rose-500/40 active:scale-95 disabled:opacity-50"
+          className="group flex items-center rounded-full justify-center text-red-500 shadow-md shadow-rose-500/30 transition-all hover:enabled:scale-110 hover:enabled:shadow-lg hover:enabled:shadow-rose-500/40 active:scale-95 disabled:opacity-50"
           onClick={() => onAct(person.id, "like")}
           disabled={isActing}
           aria-label={`Like ${person.display_name}`}
           title="Like"
         >
-          <Icon name="heart" size={26} style={{ fill: "currentColor" }} className="transition-transform group-hover:scale-110" />
+          <Icon name="heart" size={44} style={{ fill: "currentColor" }} className="transition-transform group-hover:scale-110" />
         </button>
+        </div>
       </div>
     </article>
   );
@@ -304,7 +305,8 @@ export default function Discover() {
         </div>
       ) : profiles.length > 0 ? (
         /* Endless Scrolling Feed */
-        <div className="flex w-full flex-col items-center gap-7">
+        <div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 w-full flex-col items-center sm:gap-7">
           {profiles.map((person) => (
             <FeedPersonCard
               key={person.id}
@@ -313,7 +315,7 @@ export default function Discover() {
               isActing={actingId === person.id}
             />
           ))}
-
+        </div>
           {/* Endless Scroll Sentinel */}
           <div ref={sentinelRef} className="h-6 w-full" aria-hidden="true" />
 
@@ -327,7 +329,7 @@ export default function Discover() {
 
           {/* End of Feed */}
           {!hasMore && (
-            <div className="mt-4 flex max-w-[420px] flex-col items-center justify-center rounded-3xl border border-slate-200/80 bg-white p-7 text-center shadow-sm">
+            <div className="mt-4 flex max-w-full flex-col items-center justify-center rounded-3xl border border-slate-200/80 bg-white p-7 text-center shadow-sm">
               <div className="grid h-12 w-12 place-items-center rounded-2xl bg-rose-50 text-rose-500">
                 <Icon name="spark" size={22} />
               </div>

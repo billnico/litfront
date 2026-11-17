@@ -27,7 +27,7 @@ export function useUniversities() {
     if (id === NONE_ID) return "No university";
     const u = list.find((x) => x.id === id);
     if (!u) return id;
-    return short ? u.short_name || u.name : u.name;
+    return short ? u.name : u.short_name;
   };
 
   return { list, label };
